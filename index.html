@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Mercadinho Digital</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         * {
             font-family: 'Poppins', sans-serif;
         }
-        
+
         body {
             background-color: #F9FAFB;
             min-height: 100vh;
             display: flex;
             align-items: center;
         }
-        
+
         .login-container {
             width: 100%;
             min-height: 100vh;
         }
-        
+
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
             color: #22C55E;
             text-decoration: none;
         }
-        
+
         .logo:hover {
             color: #16A34A;
         }
-        
+
         .login-card {
             background: white;
             border-radius: 16px;
@@ -48,37 +49,37 @@
             max-width: 450px;
             width: 100%;
         }
-        
+
         .login-title {
             font-size: 1.875rem;
             font-weight: 700;
             color: #111827;
             margin-bottom: 8px;
         }
-        
+
         .login-subtitle {
             font-size: 0.875rem;
             color: #6B7280;
             margin-bottom: 32px;
         }
-        
+
         .form-control {
             padding: 12px 12px 12px 40px;
             border-radius: 8px;
             border: 1px solid #D1D5DB;
             font-size: 0.875rem;
         }
-        
+
         .form-control:focus {
             border-color: #22C55E;
             box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
         }
-        
+
         .input-group {
             position: relative;
             margin-bottom: 16px;
         }
-        
+
         .input-icon {
             position: absolute;
             left: 12px;
@@ -87,7 +88,7 @@
             color: #9CA3AF;
             z-index: 10;
         }
-        
+
         .password-toggle {
             position: absolute;
             right: 12px;
@@ -99,27 +100,27 @@
             cursor: pointer;
             z-index: 10;
         }
-        
+
         .password-toggle:hover {
             color: #6B7280;
         }
-        
+
         .form-check-label {
             font-size: 0.875rem;
             color: #374151;
         }
-        
+
         .forgot-link {
             font-size: 0.875rem;
             color: #22C55E;
             text-decoration: none;
         }
-        
+
         .forgot-link:hover {
             color: #16A34A;
             text-decoration: underline;
         }
-        
+
         .btn-login {
             width: 100%;
             padding: 12px;
@@ -131,31 +132,31 @@
             font-size: 1rem;
             transition: background-color 0.2s;
         }
-        
+
         .btn-login:hover {
             background-color: #16A34A;
         }
-        
+
         .divider {
             display: flex;
             align-items: center;
             text-align: center;
             margin: 24px 0;
         }
-        
+
         .divider::before,
         .divider::after {
             content: '';
             flex: 1;
             border-bottom: 1px solid #E5E7EB;
         }
-        
+
         .divider span {
             padding: 0 16px;
             color: #9CA3AF;
             font-size: 0.875rem;
         }
-        
+
         .social-btn {
             width: 100%;
             padding: 10px;
@@ -172,61 +173,58 @@
             transition: all 0.2s;
             margin-bottom: 12px;
         }
-        
+
         .social-btn:hover {
             background-color: #F9FAFB;
             border-color: #D1D5DB;
         }
-        
+
         .social-btn img {
             width: 20px;
             height: 20px;
         }
-        
+
         .signup-text {
             text-align: center;
             margin-top: 24px;
             font-size: 0.875rem;
             color: #6B7280;
         }
-        
+
         .signup-link {
             color: #22C55E;
             text-decoration: none;
             font-weight: 600;
         }
-        
+
         .signup-link:hover {
             color: #16A34A;
             text-decoration: underline;
         }
-        
+
         .image-section {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(249, 250, 251, 0.5) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
+            background-image: url('assets/img/Login.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
         }
-        
-        .image-section img {
-            max-width: 80%;
-            height: auto;
-            opacity: 0.8;
-        }
-        
+
+
+
+
         @media (max-width: 991px) {
             .image-section {
                 display: none;
             }
-            
+
             .login-card {
                 margin: 20px auto;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid login-container">
         <div class="row h-100">
@@ -238,28 +236,29 @@
                         <i class="bi bi-cart-fill me-2"></i>
                         Mercadinho Digital
                     </a>
-                    
+
                     <!-- Login Card -->
                     <div class="login-card">
                         <h1 class="login-title">Bem-vindo de volta!</h1>
                         <p class="login-subtitle">Entre com sua conta para continuar suas compras.</p>
-                        
+
                         <form>
                             <!-- Email Input -->
                             <div class="input-group">
                                 <i class="bi bi-envelope input-icon"></i>
                                 <input type="email" class="form-control" placeholder="Digite seu e-mail" required>
                             </div>
-                            
+
                             <!-- Password Input -->
                             <div class="input-group">
                                 <i class="bi bi-lock input-icon"></i>
-                                <input type="password" class="form-control" id="passwordInput" placeholder="Digite sua senha" required>
+                                <input type="password" class="form-control" id="passwordInput"
+                                    placeholder="Digite sua senha" required>
                                 <button type="button" class="password-toggle" onclick="togglePassword()">
                                     <i class="bi bi-eye" id="toggleIcon"></i>
                                 </button>
                             </div>
-                            
+
                             <!-- Remember Me & Forgot Password -->
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="form-check">
@@ -270,41 +269,56 @@
                                 </div>
                                 <a href="#" class="forgot-link">Esqueceu a senha?</a>
                             </div>
-                            
+
                             <!-- Login Button -->
                             <button type="submit" class="btn btn-login">Entrar</button>
                         </form>
-                        
+
                         <!-- Divider -->
                         <div class="divider">
                             <span>ou</span>
                         </div>
-                        
+
                         <!-- Social Login Buttons -->
                         <button class="social-btn">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19.8055 10.2292C19.8055 9.55056 19.7501 8.86667 19.6306 8.19861H10.2V12.0486H15.6014C15.3773 13.2911 14.6571 14.3898 13.6025 15.0875V17.5861H16.8251C18.7175 15.8444 19.8055 13.2722 19.8055 10.2292Z" fill="#4285F4"/>
-                                <path d="M10.2 20C12.9 20 15.1714 19.1044 16.8286 17.5858L13.606 15.0872C12.7091 15.6975 11.5587 16.0428 10.2034 16.0428C7.59474 16.0428 5.38272 14.2828 4.58904 11.9164H1.26367V14.4922C2.96127 17.8692 6.41892 20 10.2 20Z" fill="#34A853"/>
-                                <path d="M4.58545 11.9167C4.16636 10.6742 4.16636 9.33008 4.58545 8.08758V5.51172H1.26364C-0.154545 8.33786 -0.154545 11.6667 1.26364 14.4928L4.58545 11.9167Z" fill="#FBBC04"/>
-                                <path d="M10.2 3.95722C11.6254 3.93555 13.0034 4.47222 14.0366 5.45722L16.8943 2.60167C15.0857 0.904445 12.6857 -0.0322333 10.2 0.000100118C6.41892 0.000100118 2.96127 2.13056 1.26367 5.51167L4.58548 8.08778C5.37559 5.71722 7.59117 3.95722 10.2 3.95722Z" fill="#EA4335"/>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M19.8055 10.2292C19.8055 9.55056 19.7501 8.86667 19.6306 8.19861H10.2V12.0486H15.6014C15.3773 13.2911 14.6571 14.3898 13.6025 15.0875V17.5861H16.8251C18.7175 15.8444 19.8055 13.2722 19.8055 10.2292Z"
+                                    fill="#4285F4" />
+                                <path
+                                    d="M10.2 20C12.9 20 15.1714 19.1044 16.8286 17.5858L13.606 15.0872C12.7091 15.6975 11.5587 16.0428 10.2034 16.0428C7.59474 16.0428 5.38272 14.2828 4.58904 11.9164H1.26367V14.4922C2.96127 17.8692 6.41892 20 10.2 20Z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M4.58545 11.9167C4.16636 10.6742 4.16636 9.33008 4.58545 8.08758V5.51172H1.26364C-0.154545 8.33786 -0.154545 11.6667 1.26364 14.4928L4.58545 11.9167Z"
+                                    fill="#FBBC04" />
+                                <path
+                                    d="M10.2 3.95722C11.6254 3.93555 13.0034 4.47222 14.0366 5.45722L16.8943 2.60167C15.0857 0.904445 12.6857 -0.0322333 10.2 0.000100118C6.41892 0.000100118 2.96127 2.13056 1.26367 5.51167L4.58548 8.08778C5.37559 5.71722 7.59117 3.95722 10.2 3.95722Z"
+                                    fill="#EA4335" />
                             </svg>
                             Continuar com Google
                         </button>
-                        
+
                         <button class="social-btn">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 10C20 4.47715 15.5229 0 10 0C4.47715 0 0 4.47715 0 10C0 14.9912 3.65684 19.1283 8.4375 19.8785V12.8906H5.89844V10H8.4375V7.79688C8.4375 5.29063 9.93047 3.90625 12.2146 3.90625C13.3084 3.90625 14.4531 4.10156 14.4531 4.10156V6.5625H13.1922C11.95 6.5625 11.5625 7.3334 11.5625 8.125V10H14.3359L13.8926 12.8906H11.5625V19.8785C16.3432 19.1283 20 14.9912 20 10Z" fill="#1877F2"/>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M20 10C20 4.47715 15.5229 0 10 0C4.47715 0 0 4.47715 0 10C0 14.9912 3.65684 19.1283 8.4375 19.8785V12.8906H5.89844V10H8.4375V7.79688C8.4375 5.29063 9.93047 3.90625 12.2146 3.90625C13.3084 3.90625 14.4531 4.10156 14.4531 4.10156V6.5625H13.1922C11.95 6.5625 11.5625 7.3334 11.5625 8.125V10H14.3359L13.8926 12.8906H11.5625V19.8785C16.3432 19.1283 20 14.9912 20 10Z"
+                                    fill="#1877F2" />
                             </svg>
                             Continuar com Facebook
                         </button>
-                        
+
                         <button class="social-btn">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16.4023 8.5293C16.4219 8.70898 16.4219 8.88867 16.4219 9.07227C16.4219 14.0996 12.6934 19.8965 5.66797 19.8965C3.57422 19.8965 1.625 19.2871 0 18.2363C0.292969 18.2715 0.566406 18.2871 0.871094 18.2871C2.60156 18.2871 4.19141 17.7012 5.46094 16.7012C3.84766 16.666 2.48828 15.6113 2.01953 14.1465C2.25 14.1816 2.48047 14.2051 2.72656 14.2051C3.0625 14.2051 3.40234 14.1582 3.71875 14.0762C2.00391 13.7246 0.714844 12.2363 0.714844 10.4355V10.3887C1.20703 10.666 1.78516 10.8359 2.39844 10.8594C1.40234 10.1934 0.738281 9.08594 0.738281 7.82617C0.738281 7.15039 0.917969 6.53516 1.23438 6.00195C3.08594 8.29883 5.89453 9.80273 9.05078 9.98242C8.99219 9.70508 8.95703 9.41602 8.95703 9.12695C8.95703 7.06836 10.6289 5.38477 12.7031 5.38477C13.7812 5.38477 14.7539 5.82617 15.4375 6.54102C16.2812 6.37695 17.0859 6.06055 17.7969 5.62891C17.5195 6.50586 16.9297 7.15039 16.1719 7.55664C16.9297 7.47461 17.6641 7.26758 18.3398 6.97852C17.8008 7.63477 17.1445 8.21289 16.4023 8.5293Z" fill="#000000"/>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16.4023 8.5293C16.4219 8.70898 16.4219 8.88867 16.4219 9.07227C16.4219 14.0996 12.6934 19.8965 5.66797 19.8965C3.57422 19.8965 1.625 19.2871 0 18.2363C0.292969 18.2715 0.566406 18.2871 0.871094 18.2871C2.60156 18.2871 4.19141 17.7012 5.46094 16.7012C3.84766 16.666 2.48828 15.6113 2.01953 14.1465C2.25 14.1816 2.48047 14.2051 2.72656 14.2051C3.0625 14.2051 3.40234 14.1582 3.71875 14.0762C2.00391 13.7246 0.714844 12.2363 0.714844 10.4355V10.3887C1.20703 10.666 1.78516 10.8359 2.39844 10.8594C1.40234 10.1934 0.738281 9.08594 0.738281 7.82617C0.738281 7.15039 0.917969 6.53516 1.23438 6.00195C3.08594 8.29883 5.89453 9.80273 9.05078 9.98242C8.99219 9.70508 8.95703 9.41602 8.95703 9.12695C8.95703 7.06836 10.6289 5.38477 12.7031 5.38477C13.7812 5.38477 14.7539 5.82617 15.4375 6.54102C16.2812 6.37695 17.0859 6.06055 17.7969 5.62891C17.5195 6.50586 16.9297 7.15039 16.1719 7.55664C16.9297 7.47461 17.6641 7.26758 18.3398 6.97852C17.8008 7.63477 17.1445 8.21289 16.4023 8.5293Z"
+                                    fill="#000000" />
                             </svg>
                             Continuar com Apple
                         </button>
-                        
+
                         <!-- Sign Up Link -->
                         <div class="signup-text">
                             Não tem uma conta? <a href="cadastro.html" class="signup-link">Cadastre-se aqui</a>
@@ -312,22 +326,21 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Right Side - Image -->
-            <div class="col-lg-6 image-section">
-                <img src="/placeholder.svg?height=600&width=600" alt="Mercado Ilustração">
-            </div>
+            <div class="col-lg-6 image-section"></div>
+
         </div>
     </div>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         function togglePassword() {
             const passwordInput = document.getElementById('passwordInput');
             const toggleIcon = document.getElementById('toggleIcon');
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 toggleIcon.classList.remove('bi-eye');
@@ -340,5 +353,5 @@
         }
     </script>
 </body>
+
 </html>
- 
