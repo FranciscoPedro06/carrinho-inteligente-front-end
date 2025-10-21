@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Mercadinho Digital</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F9FAFB;
+            min-height: 100vh;
+        }
+        
+        .signup-container {
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .signup-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        .signup-right {
+            flex: 1;
+            background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .signup-right::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+        
+        .signup-right::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+        }
+        
+        .illustration {
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .logo h1 {
+            color: #22C55E;
+            font-weight: 700;
+            font-size: 32px;
+            margin: 0;
+        }
+        
+        .logo p {
+            color: #6B7280;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .signup-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .signup-header h2 {
+            color: #111827;
+            font-weight: 600;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .signup-header p {
+            color: #6B7280;
+            font-size: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            color: #374151;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .input-group-custom {
+            position: relative;
+        }
+        
+        .input-group-custom i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            font-size: 18px;
+            z-index: 10;
+        }
+        
+        .form-control {
+            padding: 12px 16px 12px 48px;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #22C55E;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+            outline: none;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #9CA3AF;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            padding: 0;
+        }
+        
+        .password-toggle:hover {
+            color: #22C55E;
+        }
+        
+        .form-check {
+            margin-bottom: 24px;
+        }
+        
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #D1D5DB;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .form-check-input:checked {
+            background-color: #22C55E;
+            border-color: #22C55E;
+        }
+        
+        .form-check-label {
+            color: #6B7280;
+            font-size: 14px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        
+        .form-check-label a {
+            color: #22C55E;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-signup {
+            width: 100%;
+            padding: 14px;
+            background-color: #22C55E;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+        }
+        
+        .btn-signup:hover {
+            background-color: #16A34A;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 24px 0;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .divider span {
+            padding: 0 16px;
+            color: #9CA3AF;
+            font-size: 14px;
+        }
+        
+        .social-signup {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .btn-social {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .btn-social:hover {
+            background-color: #F9FAFB;
+            border-color: #22C55E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-social.google { color: #DB4437; }
+        .btn-social.facebook { color: #1877F2; }
+        .btn-social.apple { color: #000000; }
+        
+        .signup-footer {
+            text-align: center;
+            color: #6B7280;
+            font-size: 14px;
+        }
+        
+        .signup-footer a {
+            color: #22C55E;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .signup-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 992px) {
+            .signup-right {
+                display: none;
+            }
+            
+            .signup-card {
+                padding: 32px 24px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .signup-card {
+                padding: 24px 20px;
+            }
+            
+            .signup-header h2 {
+                font-size: 24px;
+            }
+            
+            .logo h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Left Side - Signup Form -->
+        <div class="signup-left">
+            <div class="logo">
+                <h1>🛒 Mercadinho Digital</h1>
+                <p>Seu mercado online favorito</p>
+            </div>
+            
+            <div class="signup-card">
+                <div class="signup-header">
+                    <h2>Crie sua conta</h2>
+                    <p>É rápido, fácil e gratuito!</p>
+                </div>
+                
+                <form id="signupForm">
+                    <!-- Nome Completo -->
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Nome completo</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-person"></i>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="fullName" 
+                                placeholder="Digite seu nome completo"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- E-mail -->
+                    <div class="form-group">
+                        <label class="form-label" for="email">E-mail</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-envelope"></i>
+                            <input 
+                                type="email" 
+                                class="form-control" 
+                                id="email" 
+                                placeholder="Digite seu e-mail"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- Telefone -->
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Telefone (opcional)</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-telephone"></i>
+                            <input 
+                                type="tel" 
+                                class="form-control" 
+                                id="phone" 
+                                placeholder="Digite seu número de telefone"
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- Senha -->
+                    <div class="form-group">
+                        <label class="form-label" for="password">Senha</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-lock"></i>
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                id="password" 
+                                placeholder="Crie uma senha"
+                                required
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <i class="bi bi-eye" id="password-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmar Senha -->
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Confirmar senha</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-lock-fill"></i>
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                id="confirmPassword" 
+                                placeholder="Confirme sua senha"
+                                required
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                <i class="bi bi-eye" id="confirmPassword-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Termos -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            Aceito os <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>
+                        </label>
+                    </div>
+                    
+                    <!-- Botão Cadastrar -->
+                    <button type="submit" class="btn-signup">Cadastrar</button>
+                    
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span>ou</span>
+                    </div>
+                    
+                    <!-- Social Signup -->
+                    <div class="social-signup">
+                        <button type="button" class="btn-social google" title="Cadastrar com Google">
+                            <i class="bi bi-google"></i>
+                        </button>
+                        <button type="button" class="btn-social facebook" title="Cadastrar com Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </button>
+                        <button type="button" class="btn-social apple" title="Cadastrar com Apple">
+                            <i class="bi bi-apple"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="signup-footer">
+                        Já tem uma conta? <a href="index.html">Entre aqui</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Right Side - Illustration -->
+        <div class="signup-right">
+            <img src="/placeholder.svg?height=500&width=500" alt="Ilustração de compras online" class="illustration">
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + '-icon');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+        
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            // Aqui você adicionaria a lógica de cadastro
+            alert('Cadastro realizado com sucesso!');
+        });
+    </script>
+</body>
+</html>
