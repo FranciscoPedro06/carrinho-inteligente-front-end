@@ -203,3 +203,8 @@ body {
         margin: 20px auto;
     }
 }
+
+#forgotPasswordLink:hover {
+    text-decoration: underline; /* opcional: só sublinha ao passar o mouse */
+    cursor: pointer;
+}

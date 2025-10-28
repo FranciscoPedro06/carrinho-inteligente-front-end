@@ -1,22 +1,23 @@
-// Importa o SDK principal do Firebase
+// js/firebase-config.js
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-// 🔥 Configuração do Firebase
+// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDu939ID9K6mCjifhw8Xm9P0U-flvO9nWo",
   authDomain: "carrinho-inteligente-d5d90.firebaseapp.com",
   projectId: "carrinho-inteligente-d5d90",
-  storageBucket: "carrinho-inteligente-d5d90.appspot.com", // ✅ corrigido
+  storageBucket: "carrinho-inteligente-d5d90.firebasestorage.app",
   messagingSenderId: "425401129695",
   appId: "1:425401129695:web:f7cd5a254d9a1fd3a7a76a",
-  measurementId: "G-3XXL35KQ1M",
+  measurementId: "G-3XXL35KQ1M"
 };
 
 // Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
 
-// Exporta a autenticação
-export const auth = getAuth(app);
-
-console.log("✅ Firebase configurado com sucesso!");
+export { auth };

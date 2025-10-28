@@ -1,13 +1,14 @@
-import { auth } from "../firebase-config";
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+// js/cadastro/cadastro.js
 
+import { auth } from "../firebase-config.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 document.getElementById("cadastroBtn").addEventListener("click", async (e) => {
   e.preventDefault();
 
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("password").value;
-  const confirmar = document.getElementById("confirmPassword").value;
+  const email = document.getElementById("email").value.trim();
+  const senha = document.getElementById("password").value.trim();
+  const confirmar = document.getElementById("confirmPassword").value.trim();
 
   if (!email || !senha) {
     alert("⚠️ Preencha e-mail e senha antes de se cadastrar!");
@@ -22,7 +23,9 @@ document.getElementById("cadastroBtn").addEventListener("click", async (e) => {
   try {
     await createUserWithEmailAndPassword(auth, email, senha);
     alert("✅ Usuário criado com sucesso!");
+    window.location.href = "index.html"; // Redireciona para login
   } catch (error) {
+    console.error(error);
     switch (error.code) {
       case "auth/email-already-in-use":
         alert("❌ Este e-mail já está cadastrado!");
