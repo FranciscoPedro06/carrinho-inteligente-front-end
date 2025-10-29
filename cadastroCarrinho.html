@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Carrinho - Sistema de Mercado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #28a745 !important;
+            font-size: 1.5rem;
+        }
+
+        .container-main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+
+        .btn-danger {
+            border-radius: 10px;
+            padding: 8px 15px;
+        }
+
+        .btn-success {
+            background: #28a745;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .table thead {
+            background: #f8f9fa;
+        }
+
+        .table th {
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 25px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #666;
+            font-weight: 500;
+            border: none;
+            padding: 12px 25px;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #28a745;
+            background: transparent;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .qr-code-display {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .qr-code-display img {
+            max-width: 200px;
+            border: 3px solid #28a745;
+            border-radius: 10px;
+            padding: 10px;
+            background: white;
+        }
+
+        .item-row {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .total-display {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 20px;
+            }
+
+            .container-main {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-cart-check-fill"></i> Sistema de Carrinho
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro.html">Cadastro</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="carrinho.html">Carrinhos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="carrinhoTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="fisico-tab" data-bs-toggle="tab" data-bs-target="#fisico" type="button">
+                    <i class="bi bi-cart3"></i> Carrinhos Físicos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="sessao-tab" data-bs-toggle="tab" data-bs-target="#sessao" type="button">
+                    <i class="bi bi-clock-history"></i> Sessões
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="itens-tab" data-bs-toggle="tab" data-bs-target="#itens" type="button">
+                    <i class="bi bi-bag-fill"></i> Itens
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="carrinhoTabContent">
+            <!-- Carrinhos Físicos Tab -->
+            <div class="tab-pane fade show active" id="fisico" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-cart3"></i> Cadastro de Carrinho Físico
+                    </div>
+                    <div class="card-body">
+                        <form id="formCarrinhoFisico">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="lojaId" class="form-label">
+                                        <i class="bi bi-shop"></i> Loja *
+                                    </label>
+                                    <select class="form-select" id="lojaId" required>
+                                        <option value="">Selecione a loja</option>
+                                        <option value="1">Loja Centro - ID: 1</option>
+                                        <option value="2">Loja Norte - ID: 2</option>
+                                        <option value="3">Loja Sul - ID: 3</option>
+                                        <option value="4">Loja Leste - ID: 4</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="codigoQr" class="form-label">
+                                        <i class="bi bi-qr-code"></i> Código QR *
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="codigoQr" placeholder="Ex: CART-2024-001" maxlength="50" required>
+                                        <button class="btn btn-success" type="button" onclick="gerarCodigoQR()">
+                                            <i class="bi bi-arrow-clockwise"></i> Gerar
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="statusCarrinho" class="form-label">
+                                        <i class="bi bi-toggle-on"></i> Status *
+                                    </label>
+                                    <select class="form-select" id="statusCarrinho" required>
+                                        <option value="disponivel">Disponível</option>
+                                        <option value="em_uso">Em Uso</option>
+                                        <option value="manutencao">Manutenção</option>
+                                        <option value="inativo">Inativo</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar"></i> Data de Criação
+                                    </label>
+                                    <input type="text" class="form-control" value="Automático" disabled>
+                                </div>
+                            </div>
+
+                            <div class="qr-code-display" id="qrCodeDisplay" style="display: none;">
+                                <p class="mb-2"><strong>QR Code Gerado:</strong></p>
+                                <img src="/placeholder.svg?height=200&width=200" alt="QR Code" id="qrCodeImage">
+                                <p class="mt-2 text-muted" id="qrCodeText"></p>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Salvar Carrinho
+                                </button>
+                                <button type="reset" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Limpar
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Lista de Carrinhos -->
+                        <div class="mt-5">
+                            <h5 class="mb-3"><i class="bi bi-list-ul"></i> Carrinhos Cadastrados</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Loja</th>
+                                            <th>Código QR</th>
+                                            <th>Status</th>
+                                            <th>Criado em</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaCarrinhos">
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Loja Centro</td>
+                                            <td><code>CART-2024-001</code></td>
+                                            <td><span class="badge bg-success">Disponível</span></td>
+                                            <td>15/01/2024 10:30</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" onclick="editarCarrinho(1)">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="excluirCarrinho(1)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Loja Norte</td>
+                                            <td><code>CART-2024-002</code></td>
+                                            <td><span class="badge bg-warning text-dark">Em Uso</span></td>
+                                            <td>15/01/2024 11:15</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" onclick="editarCarrinho(2)">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="excluirCarrinho(2)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sessões Tab -->
+            <div class="tab-pane fade" id="sessao" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-clock-history"></i> Cadastro de Sessão de Carrinho
+                    </div>
+                    <div class="card-body">
+                        <form id="formSessao">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="carrinhoIdSessao" class="form-label">
+                                        <i class="bi bi-cart3"></i> Carrinho Físico *
+                                    </label>
+                                    <select class="form-select" id="carrinhoIdSessao" required>
+                                        <option value="">Selecione o carrinho</option>
+                                        <option value="1">CART-2024-001 - Loja Centro</option>
+                                        <option value="2">CART-2024-002 - Loja Norte</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="clienteId" class="form-label">
+                                        <i class="bi bi-person"></i> Cliente *
+                                    </label>
+                                    <select class="form-select" id="clienteId" required>
+                                        <option value="">Selecione o cliente</option>
+                                        <option value="1">João Silva - ID: 1</option>
+                                        <option value="2">Maria Santos - ID: 2</option>
+                                        <option value="3">Pedro Oliveira - ID: 3</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="statusSessao" class="form-label">
+                                        <i class="bi bi-toggle-on"></i> Status *
+                                    </label>
+                                    <select class="form-select" id="statusSessao" required>
+                                        <option value="ativa">Ativa</option>
+                                        <option value="finalizada">Finalizada</option>
+                                        <option value="cancelada">Cancelada</option>
+                                        <option value="abandonada">Abandonada</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="totalSessao" class="form-label">
+                                        <i class="bi bi-currency-dollar"></i> Total (R$)
+                                    </label>
+                                    <input type="number" class="form-control" id="totalSessao" placeholder="0.00" step="0.01" min="0" value="0.00">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar"></i> Criado em
+                                    </label>
+                                    <input type="text" class="form-control" value="Automático" disabled>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar-check"></i> Atualizado em
+                                    </label>
+                                    <input type="text" class="form-control" value="Automático" disabled>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Salvar Sessão
+                                </button>
+                                <button type="reset" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Limpar
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Lista de Sessões -->
+                        <div class="mt-5">
+                            <h5 class="mb-3"><i class="bi bi-list-ul"></i> Sessões Cadastradas</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Carrinho</th>
+                                            <th>Cliente</th>
+                                            <th>Status</th>
+                                            <th>Total</th>
+                                            <th>Criado em</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaSessoes">
+                                        <tr>
+                                            <td>1</td>
+                                            <td>CART-2024-001</td>
+                                            <td>João Silva</td>
+                                            <td><span class="badge bg-success">Ativa</span></td>
+                                            <td>R$ 125,50</td>
+                                            <td>15/01/2024 14:20</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" onclick="editarSessao(1)">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="excluirSessao(1)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Itens Tab -->
+            <div class="tab-pane fade" id="itens" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-bag-fill"></i> Cadastro de Itens do Carrinho
+                    </div>
+                    <div class="card-body">
+                        <form id="formItens">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="sessaoId" class="form-label">
+                                        <i class="bi bi-clock-history"></i> Sessão *
+                                    </label>
+                                    <select class="form-select" id="sessaoId" required onchange="atualizarTotalSessao()">
+                                        <option value="">Selecione a sessão</option>
+                                        <option value="1">Sessão #1 - João Silva</option>
+                                        <option value="2">Sessão #2 - Maria Santos</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="produtoId" class="form-label">
+                                        <i class="bi bi-box"></i> Produto *
+                                    </label>
+                                    <select class="form-select" id="produtoId" required onchange="atualizarPrecoProduto()">
+                                        <option value="">Selecione o produto</option>
+                                        <option value="1" data-preco="5.99">Arroz 5kg - R$ 5,99</option>
+                                        <option value="2" data-preco="3.50">Feijão 1kg - R$ 3,50</option>
+                                        <option value="3" data-preco="12.90">Óleo de Soja 900ml - R$ 12,90</option>
+                                        <option value="4" data-preco="8.75">Açúcar 1kg - R$ 8,75</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="quantidade" class="form-label">
+                                        <i class="bi bi-123"></i> Quantidade *
+                                    </label>
+                                    <input type="number" class="form-control" id="quantidade" placeholder="1.000" step="0.001" min="0.001" required onchange="calcularPrecoTotal()">
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="precoUnit" class="form-label">
+                                        <i class="bi bi-currency-dollar"></i> Preço Unit. (R$) *
+                                    </label>
+                                    <input type="number" class="form-control" id="precoUnit" placeholder="0.00" step="0.01" min="0" required onchange="calcularPrecoTotal()">
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="precoTotal" class="form-label">
+                                        <i class="bi bi-calculator"></i> Preço Total (R$)
+                                    </label>
+                                    <input type="number" class="form-control" id="precoTotal" placeholder="0.00" step="0.01" min="0" readonly>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar"></i> Adicionado em
+                                    </label>
+                                    <input type="text" class="form-control" value="Automático" disabled>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i> Adicionar Item
+                                </button>
+                                <button type="reset" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Limpar
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Lista de Itens -->
+                        <div class="mt-5">
+                            <h5 class="mb-3"><i class="bi bi-list-ul"></i> Itens Cadastrados</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Sessão</th>
+                                            <th>Produto</th>
+                                            <th>Quantidade</th>
+                                            <th>Preço Unit.</th>
+                                            <th>Preço Total</th>
+                                            <th>Adicionado em</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaItens">
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Sessão #1</td>
+                                            <td>Arroz 5kg</td>
+                                            <td>2.000</td>
+                                            <td>R$ 5,99</td>
+                                            <td>R$ 11,98</td>
+                                            <td>15/01/2024 14:25</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" onclick="editarItem(1)">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="excluirItem(1)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Sessão #1</td>
+                                            <td>Feijão 1kg</td>
+                                            <td>3.000</td>
+                                            <td>R$ 3,50</td>
+                                            <td>R$ 10,50</td>
+                                            <td>15/01/2024 14:27</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" onclick="editarItem(2)">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="excluirItem(2)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="total-display">
+                                <i class="bi bi-cart-check"></i> Total da Sessão: R$ 125,50
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Gerar código QR aleatório
+        function gerarCodigoQR() {
+            const timestamp = Date.now();
+            const random = Math.floor(Math.random() * 1000);
+            const codigo = `CART-${timestamp}-${random}`;
+            document.getElementById('codigoQr').value = codigo;
+            
+            // Mostrar QR Code
+            document.getElementById('qrCodeDisplay').style.display = 'block';
+            document.getElementById('qrCodeText').textContent = codigo;
+        }
+
+        // Atualizar preço do produto selecionado
+        function atualizarPrecoProduto() {
+            const select = document.getElementById('produtoId');
+            const selectedOption = select.options[select.selectedIndex];
+            const preco = selectedOption.getAttribute('data-preco');
+            
+            if (preco) {
+                document.getElementById('precoUnit').value = preco;
+                calcularPrecoTotal();
+            }
+        }
+
+        // Calcular preço total do item
+        function calcularPrecoTotal() {
+            const quantidade = parseFloat(document.getElementById('quantidade').value) || 0;
+            const precoUnit = parseFloat(document.getElementById('precoUnit').value) || 0;
+            const precoTotal = (quantidade * precoUnit).toFixed(2);
+            
+            document.getElementById('precoTotal').value = precoTotal;
+        }
+
+        // Atualizar total da sessão
+        function atualizarTotalSessao() {
+            // Aqui você calcularia o total baseado nos itens da sessão
+            console.log('[v0] Atualizando total da sessão');
+        }
+
+        // Form Carrinho Físico
+        document.getElementById('formCarrinhoFisico').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dados = {
+                loja_id: document.getElementById('lojaId').value,
+                codigo_qr: document.getElementById('codigoQr').value,
+                status: document.getElementById('statusCarrinho').value,
+                criado_em: new Date().toISOString()
+            };
+            
+            console.log('[v0] Salvando carrinho físico:', dados);
+            alert('Carrinho físico cadastrado com sucesso!');
+            this.reset();
+            document.getElementById('qrCodeDisplay').style.display = 'none';
+        });
+
+        // Form Sessão
+        document.getElementById('formSessao').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dados = {
+                carrinho_id: document.getElementById('carrinhoIdSessao').value,
+                cliente_id: document.getElementById('clienteId').value,
+                status: document.getElementById('statusSessao').value,
+                total: parseFloat(document.getElementById('totalSessao').value),
+                criado_em: new Date().toISOString(),
+                atualizado_em: new Date().toISOString()
+            };
+            
+            console.log('[v0] Salvando sessão:', dados);
+            alert('Sessão cadastrada com sucesso!');
+            this.reset();
+        });
+
+        // Form Itens
+        document.getElementById('formItens').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dados = {
+                sessao_id: document.getElementById('sessaoId').value,
+                produto_id: document.getElementById('produtoId').value,
+                quantidade: parseFloat(document.getElementById('quantidade').value),
+                preco_unit: parseFloat(document.getElementById('precoUnit').value),
+                preco_total: parseFloat(document.getElementById('precoTotal').value),
+                adicionado_em: new Date().toISOString()
+            };
+            
+            console.log('[v0] Adicionando item:', dados);
+            alert('Item adicionado com sucesso!');
+            this.reset();
+        });
+
+        // Funções de edição e exclusão
+        function editarCarrinho(id) {
+            console.log('[v0] Editando carrinho:', id);
+            alert('Função de edição será implementada');
+        }
+
+        function excluirCarrinho(id) {
+            if (confirm('Deseja realmente excluir este carrinho?')) {
+                console.log('[v0] Excluindo carrinho:', id);
+                alert('Carrinho excluído com sucesso!');
+            }
+        }
+
+        function editarSessao(id) {
+            console.log('[v0] Editando sessão:', id);
+            alert('Função de edição será implementada');
+        }
+
+        function excluirSessao(id) {
+            if (confirm('Deseja realmente excluir esta sessão?')) {
+                console.log('[v0] Excluindo sessão:', id);
+                alert('Sessão excluída com sucesso!');
+            }
+        }
+
+        function editarItem(id) {
+            console.log('[v0] Editando item:', id);
+            alert('Função de edição será implementada');
+        }
+
+        function excluirItem(id) {
+            if (confirm('Deseja realmente excluir este item?')) {
+                console.log('[v0] Excluindo item:', id);
+                alert('Item excluído com sucesso!');
+            }
+        }
+    </script>
+</body>
+</html>
