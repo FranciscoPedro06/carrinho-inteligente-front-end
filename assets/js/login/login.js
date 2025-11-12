@@ -30,7 +30,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     const user = userCredential.user;
 
     alert("Login realizado com sucesso!");
-    window.location.href = "index.html"; // redireciona para a página principal
+    window.location.href = "listadeCompras.html"; // redireciona para a página principal
   } catch (error) {
     console.error(error);
     alert("Erro ao fazer login: " + traduzErroFirebase(error.code));
