@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho Inteligente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/lista/listaDeCompras.css">
+</head>
+
+<body>
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1><i class="bi bi-cart-check"></i> Lista de Compras </h1>
+            <p>Escaneie os produtos e acompanhe seu total em tempo real</p>
+        </div>
+
+        <div class="cart-body">
+            <!-- Scanner Section -->
+            <div class="scanner-section">
+                <label for="barcodeInput">
+                    <i class="bi bi-upc-scan"></i> Código de Barras
+                </label>
+                <div class="barcode-input-group">
+                    <input type="text" id="barcodeInput" class="form-control"
+                        placeholder="Escaneie ou digite o código de barras" autofocus>
+                    <i class="bi bi-upc-scan scan-icon"></i>
+                </div>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="cart-items">
+                <h3><i class="bi bi-bag-check"></i> Itens no Carrinho (<span id="itemCount">0</span>)</h3>
+                <div id="cartItemsList">
+                    <div class="empty-cart">
+                        <i class="bi bi-cart-x"></i>
+                        <p>Seu carrinho está vazio</p>
+                        <small>Comece escaneando produtos</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-summary" id="cartSummary" style="display: none;">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Desconto:</span>
+                    <span id="discount">R$ 0,00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">R$ 0,00</span>
+                </div>
+                <button class="checkout-btn" onclick="finalizarCompra()">
+                    <i class="bi bi-check-circle"></i> Finalizar Compra
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal de Pagamento -->
+        <div id="paymentModal">
+            <div class="payment-box">
+                <h2>Forma de Pagamento</h2>
+                <div class="payment-options">
+                    <button onclick="escolherPagamento(1)">💳 Débito</button>
+                    <button onclick="escolherPagamento(2)">💳 Crédito</button>
+                    <button onclick="escolherPagamento(3)">⚡ PIX</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+        // ==========================================
+        // 🔧 Config do Firebase (seus dados)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDu939ID9K6mCjifhw8Xm9P0U-flvO9nWo",
+            authDomain: "carrinho-inteligente-d5d90.firebaseapp.com",
+            databaseURL: "https://carrinho-inteligente-d5d90-default-rtdb.firebaseio.com",
+            projectId: "carrinho-inteligente-d5d90",
+            storageBucket: "carrinho-inteligente-d5d90.firebasestorage.app",
+            messagingSenderId: "425401129695",
+            appId: "1:425401129695:web:f7cd5a254d9a1fd3a7a76a",
+            measurementId: "G-3XXL35KQ1M"
+        };
+
+        // Inicializa o Firebase e o Banco de Dados
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // ==========================================
+        // 📤 Envia o código escaneado para o Wokwi
+        // ==========================================
+        const input = document.getElementById("barcodeInput");
+
+        input.addEventListener("keypress", async (e) => {
+            if (e.key === "Enter") {
+                const codigo = input.value.trim();
+                if (!codigo) return;
+
+                console.log("📤 Enviando código ao Firebase:", codigo);
+                await set(ref(db, "arduino/barcode"), codigo);
+
+                mostrarMensagem(`📦 Código enviado: ${codigo}`);
+                input.value = "";
+            }
+        });
+
+        // ==========================================
+        // 📡 Recebe mensagens do LCD (Wokwi → Front)
+        // ==========================================
+        onValue(ref(db, "arduino/statusLCD"), (snapshot) => {
+            const mensagem = snapshot.val();
+            if (mensagem) {
+                mostrarMensagem(`💬 ${mensagem}`);
+                console.log("💬 LCD:", mensagem);
+            }
+        });
+
+        // ==========================================
+        // 💳 Recebe status de pagamento (Wokwi → Front)
+        // ==========================================
+        onValue(ref(db, "arduino/pagamento/status"), (snapshot) => {
+            const status = snapshot.val();
+            if (status) {
+                mostrarMensagem(`💳 ${status}`);
+                console.log("💸 Pagamento:", status);
+            }
+        });
+
+        // ==========================================
+        // 💰 Atualiza total no Firebase (Front → Wokwi)
+        // ==========================================
+        window.atualizarTotalFirebase = async function (total) {
+            try {
+                await set(ref(db, "arduino/total"), total);
+                console.log("💾 Total atualizado no Firebase:", total);
+            } catch (e) {
+                console.error("Erro ao atualizar total:", e);
+            }
+        };
+
+        // ==========================================
+        // 🧾 Finalizar compra (envia forma de pagamento)
+        // ==========================================
+        window.finalizarCompra = async function () {
+            if (typeof carrinho === "undefined" || carrinho.length === 0) {
+                mostrarMensagem("❗ Carrinho vazio");
+                return;
+            }
+
+            const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            await atualizarTotalFirebase(total);
+
+            const forma = prompt(
+                `Valor total: R$ ${total.toFixed(2)}\nEscolha forma de pagamento:\n1 - Débito\n2 - Crédito\n3 - PIX`
+            );
+
+            if (["1", "2", "3"].includes(forma)) {
+                await set(ref(db, "arduino/pagamento/opcao"), forma);
+                mostrarMensagem("🕐 Processando pagamento...");
+                console.log("💾 Forma enviada:", forma);
+            } else {
+                mostrarMensagem("❌ Pagamento cancelado");
+            }
+        };
+
+        // ==========================================
+        // 🔔 Exibe mensagens rápidas no front
+        // ==========================================
+        function mostrarMensagem(texto) {
+            let alerta = document.createElement("div");
+            alerta.className = "alert alert-info position-fixed bottom-0 end-0 m-3 shadow";
+            alerta.style.zIndex = "9999";
+            alerta.textContent = texto;
+            document.body.appendChild(alerta);
+
+            setTimeout(() => alerta.remove(), 4000);
+        }
+
+        // ==========================================
+        // 🪄 Hook: toda vez que o JS atualizar o total (front)
+        // ==========================================
+        const observer = new MutationObserver(() => {
+            const totalEl = document.getElementById("total");
+            if (totalEl) {
+                const texto = totalEl.textContent.replace("R$", "").replace(",", ".").trim();
+                const total = parseFloat(texto) || 0;
+                atualizarTotalFirebase(total);
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/lista/listaDeCompras.js"></script>
+</body>
+
+</html>
