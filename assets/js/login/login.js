@@ -21,6 +21,7 @@ window.togglePassword = function () {
 };
 
 // Evento de login
+// Evento de login
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const email = document.getElementById("email").value;
   const senha = document.getElementById("senha").value;
@@ -29,13 +30,20 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     const userCredential = await signInWithEmailAndPassword(auth, email, senha);
     const user = userCredential.user;
 
-    alert("Login realizado com sucesso!");
-    window.location.href = "listadeCompras.html"; // redireciona para a página principal
+    // Verificar se o e-mail e senha são os específicos
+    if (email === "henriquefranciscomatheus0@gmail.com" && senha === "123123123") {
+      alert("Login realizado com sucesso!");
+      window.location.href = "cadastroCarrinho.html"; // redireciona para a página de cadastro do carrinho
+    } else {
+      alert("Login realizado com sucesso!");
+      window.location.href = "listadeCompras.html"; // redireciona para a página principal para outros usuários
+    }
   } catch (error) {
     console.error(error);
     alert("Erro ao fazer login: " + traduzErroFirebase(error.code));
   }
 });
+
 
 // Observa mudanças de autenticação
 onAuthStateChanged(auth, (user) => {

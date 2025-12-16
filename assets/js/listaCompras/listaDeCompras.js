@@ -1,179 +1,259 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { auth } from "../firebase-config.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-// ================================
-// 🔧 Config Firebase
-// ================================
-const firebaseConfig = {
-  apiKey: "AIzaSyDu939ID9K6mCjifhw8Xm9P0U-flvO9nWo",
-  authDomain: "carrinho-inteligente-d5d90.firebaseapp.com",
-  databaseURL: "https://carrinho-inteligente-d5d90-default-rtdb.firebaseio.com",
-  projectId: "carrinho-inteligente-d5d90",
-  storageBucket: "carrinho-inteligente-d5d90.firebasestorage.app",
-  messagingSenderId: "425401129695",
-  appId: "1:425401129695:web:f7cd5a254d9a1fd3a7a76a",
-  measurementId: "G-3XXL35KQ1M"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// ================================
-// 🧾 Produtos
-// ================================
-const produtosDB = {
-  '7891234567890': { nome: 'Arroz Integral 1kg', preco: 12.90 },
-  '7891234567891': { nome: 'Feijão Preto 1kg', preco: 8.50 },
-  '7891234567892': { nome: 'Macarrão Espaguete 500g', preco: 4.20 },
-  '7891234567893': { nome: 'Óleo de Soja 900ml', preco: 7.80 },
-  '7891234567894': { nome: 'Açúcar Cristal 1kg', preco: 5.30 },
-  '7891234567895': { nome: 'Café Torrado 500g', preco: 15.90 },
-  '7891234567896': { nome: 'Leite Integral 1L', preco: 4.50 },
-  '7891234567897': { nome: 'Farinha de Trigo 1kg', preco: 6.20 },
-  '7891234567898': { nome: 'Sal Refinado 1kg', preco: 2.10 },
-  '7891234567899': { nome: 'Molho de Tomate 500g', preco: 3.80 }
-};
-
-let carrinho = [];
-document.getElementById('barcodeInput').focus();
-
-// ================================
-// 📦 Escanear produtos
-// ================================
-document.getElementById('barcodeInput').addEventListener('keypress', async function (e) {
-  if (e.key === 'Enter') {
-    const barcode = this.value.trim();
-    if (!barcode) return;
-    adicionarProduto(barcode);
-    await set(ref(db, 'arduino/barcode'), barcode); // envia pro Wokwi
-    this.value = '';
-  }
+// Logout
+const logoutBtn = document.getElementById("logoutBtn");
+logoutBtn.addEventListener("click", async () => {
+    try {
+        await signOut(auth);
+        alert("Você saiu da conta com sucesso!");
+        window.location.href = "index.html"; // Redireciona para a tela de login
+    } catch (error) {
+        console.error("Erro ao sair:", error);
+        alert("Não foi possível sair da conta.");
+    }
 });
 
-// ================================
-// 📲 Atualizar Firebase
-// ================================
-async function atualizarTotalFirebase() {
-  const total = carrinho.reduce((s, i) => s + (i.preco * i.quantidade), 0);
-  await set(ref(db, 'arduino/total'), total);
-}
+const db = getFirestore();
 
-// ================================
-// 🧮 Carrinho
-// ================================
-function adicionarProduto(barcode) {
-  const produto = produtosDB[barcode];
-  if (!produto) return mostrarAlerta('Produto não encontrado!', 'danger');
 
-  const item = carrinho.find(i => i.barcode === barcode);
-  if (item) item.quantidade++;
-  else carrinho.push({ barcode, nome: produto.nome, preco: produto.preco, quantidade: 1 });
+const API = "http://localhost:5000";
 
-  atualizarCarrinho();
-  mostrarAlerta('Produto adicionado!', 'success');
-}
+const cartItemsList = document.getElementById("cartItemsList");
+const itemCount = document.getElementById("itemCount");
+const subtotalEl = document.getElementById("subtotal");
+const totalEl = document.getElementById("total");
+const cartSummary = document.getElementById("cartSummary");
 
-function removerProduto(barcode) {
-  carrinho = carrinho.filter(i => i.barcode !== barcode);
-  atualizarCarrinho();
-  mostrarAlerta('Produto removido!', 'info');
-}
+// Armazena os elementos já criados
+const elementosCarrinho = {};
 
-function alterarQuantidade(barcode, delta) {
-  const item = carrinho.find(i => i.barcode === barcode);
-  if (!item) return;
-  item.quantidade += delta;
-  if (item.quantidade <= 0) removerProduto(barcode);
-  else atualizarCarrinho();
-}
-
-function atualizarCarrinho() {
-  const cartItemsList = document.getElementById('cartItemsList');
-  const itemCount = document.getElementById('itemCount');
-  const cartSummary = document.getElementById('cartSummary');
-
-  if (carrinho.length === 0) {
-    cartItemsList.innerHTML = `
-      <div class="empty-cart">
-        <i class="bi bi-cart-x"></i>
-        <p>Seu carrinho está vazio</p>
-        <small>Comece escaneando produtos</small>
-      </div>`;
-    cartSummary.style.display = 'none';
-    itemCount.textContent = '0';
-    atualizarTotalFirebase();
-    return;
-  }
-
-  let html = '';
-  let subtotal = 0;
-
-  carrinho.forEach(item => {
-    const itemTotal = item.preco * item.quantidade;
-    subtotal += itemTotal;
-    html += `
-      <div class="cart-item">
-        <div class="item-info">
-          <div class="item-name">${item.nome}</div>
-          <div class="item-barcode">Código: ${item.barcode}</div>
-        </div>
-        <div class="item-controls">
-          <div class="quantity-control">
-            <button onclick="alterarQuantidade('${item.barcode}', -1)">
-              <i class="bi bi-dash"></i>
-            </button>
-            <span>${item.quantidade}</span>
-            <button onclick="alterarQuantidade('${item.barcode}', 1)">
-              <i class="bi bi-plus"></i>
-            </button>
-          </div>
-          <div class="item-price">R$ ${itemTotal.toFixed(2)}</div>
-          <button class="remove-btn" onclick="removerProduto('${item.barcode}')">
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-      </div>`;
-  });
-
-  cartItemsList.innerHTML = html;
-  itemCount.textContent = carrinho.reduce((s, i) => s + i.quantidade, 0);
-  const total = subtotal;
-
-  document.getElementById('subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
-  document.getElementById('discount').textContent = `R$ 0,00`;
-  document.getElementById('total').textContent = `R$ ${total.toFixed(2)}`;
-
-  cartSummary.style.display = 'block';
-  atualizarTotalFirebase();
-}
-
-// ================================
-// 💬 Alertas
-// ================================
-function mostrarAlerta(msg, tipo) {
-  const div = document.createElement('div');
-  div.className = `alert alert-${tipo} alert-dismissible fade show alert-custom`;
-  div.innerHTML = `${msg} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
-  document.body.appendChild(div);
-  setTimeout(() => div.remove(), 3000);
-}
-
-// ================================
-// 💳 Pagamento estilizado
-// ================================
-window.finalizarCompra = function () {
-  if (carrinho.length === 0) return mostrarAlerta('Carrinho vazio!', 'warning');
-  document.getElementById("paymentModal").style.display = "flex";
-};
-
-window.escolherPagamento = async function (opcao) {
-  document.getElementById("paymentModal").style.display = "none";
-  await set(ref(db, "arduino/pagamento/opcao"), opcao);
-  mostrarAlerta("Processando pagamento...", "info");
-};
-
-// Recebe status do pagamento
-onValue(ref(db, "arduino/pagamento/status"), (snap) => {
-  const status = snap.val();
-  if (status) mostrarAlerta(`💳 ${status}`, "success");
+// Guarda o usuário logado
+let usuarioLogado = null;
+auth.onAuthStateChanged(user => {
+    usuarioLogado = user;
 });
+
+// ==========================
+// ATUALIZA CARRINHO
+// ==========================
+async function atualizarCarrinho() {
+    try {
+        const res = await fetch(`${API}/cart`);
+        const data = await res.json();
+
+        const items = data.items;
+        const keys = Object.keys(items);
+
+        // Carrinho vazio
+        if (keys.length === 0) {
+            cartItemsList.innerHTML = `
+                <div class="empty-cart">
+                    <i class="bi bi-cart-x"></i>
+                    <p>Seu carrinho está vazio</p>
+                    <small>Comece escaneando produtos</small>
+                </div>
+            `;
+            itemCount.textContent = 0;
+            subtotalEl.textContent = "R$ 0,00";
+            totalEl.textContent = "R$ 0,00";
+            cartSummary.style.display = "none";
+
+            // Limpa elementos armazenados
+            for (let key in elementosCarrinho) delete elementosCarrinho[key];
+            return;
+        }
+
+        // Remove placeholder se houver
+        const emptyCartDiv = cartItemsList.querySelector(".empty-cart");
+        if (emptyCartDiv) emptyCartDiv.remove();
+
+        // Atualiza ou cria elementos do carrinho
+        keys.forEach(code => {
+            const item = items[code];
+            const subtotalItem = item.price * item.quantity;
+
+            if (!elementosCarrinho[code]) {
+                const div = document.createElement("div");
+                div.className = "cart-item";
+                div.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-barcode">${code}</div>
+                    </div>
+                    <div class="item-controls">
+                        <span class="item-quantity">${item.quantity} × R$ ${item.price.toFixed(2)}</span>
+                        <span class="item-subtotal">R$ ${subtotalItem.toFixed(2)}</span>
+                        <button class="remove-btn" onclick="removerItem('${code}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                cartItemsList.appendChild(div);
+                elementosCarrinho[code] = div;
+            } else {
+                elementosCarrinho[code].querySelector(".item-quantity").textContent = `${item.quantity} × R$ ${item.price.toFixed(2)}`;
+                elementosCarrinho[code].querySelector(".item-subtotal").textContent = `R$ ${subtotalItem.toFixed(2)}`;
+            }
+        });
+
+        // Remove elementos que não existem mais
+        for (let key in elementosCarrinho) {
+            if (!items[key]) {
+                elementosCarrinho[key].remove();
+                delete elementosCarrinho[key];
+            }
+        }
+
+        // Atualiza totais
+        itemCount.textContent = keys.length;
+        subtotalEl.textContent = "R$ " + data.subtotal.toFixed(2);
+        totalEl.textContent = "R$ " + data.subtotal.toFixed(2);
+        cartSummary.style.display = "block";
+
+    } catch (err) {
+        console.error("Erro ao buscar carrinho:", err);
+    }
+}
+
+// ==========================
+// REMOVER ITEM
+// ==========================
+async function removerItem(code) {
+    if (!confirm("Remover este item do carrinho?")) return;
+
+    try {
+        await fetch(`${API}/remove`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code })
+        });
+        atualizarCarrinho();
+    } catch (err) {
+        console.error("Erro ao remover item:", err);
+    }
+}
+
+// ==========================
+// FINALIZAR COMPRA
+// ==========================
+async function finalizarCompra() {
+    if (!confirm("Deseja finalizar a compra?")) return;
+
+    if (!auth.currentUser) {
+        alert("Você precisa estar logado para finalizar a compra!");
+        return;
+    }
+
+    // Pega carrinho atual
+    const resCart = await fetch(`${API}/cart`);
+    const cartData = await resCart.json();
+
+    // Salva diretamente no Firestore
+    await salvarHistorico(cartData);
+
+    // Limpa carrinho
+    await fetch(`${API}/clear`, { method: "POST" });
+    atualizarCarrinho();
+}
+
+
+async function salvarHistorico(cart) {
+    if (!auth.currentUser) {
+        alert("Você precisa estar logado para salvar a compra!");
+        return;
+    }
+
+    const user = auth.currentUser;
+
+    try {
+        await addDoc(collection(db, "historico_compras"), {
+            user_email: user.email,
+            user_uid: user.uid,
+            cart: cart,
+            timestamp: serverTimestamp()
+        });
+
+        console.log("✅ Compra salva no Firebase!");
+        alert("Compra finalizada com sucesso!");
+    } catch (err) {
+        console.error("Erro ao salvar histórico:", err);
+        alert("Erro ao salvar a compra. Veja o console.");
+    }
+}
+
+
+// Função para exibir histórico
+async function verHistorico() {
+    if (!auth.currentUser) {
+        alert("Você precisa estar logado para ver o histórico!");
+        return;
+    }
+
+    const historicoContainer = document.getElementById("historicoContainer");
+    const historicoList = document.getElementById("historicoList");
+    historicoList.innerHTML = "<p>Carregando histórico...</p>";
+    historicoContainer.style.display = "block";
+
+    const user = auth.currentUser;
+
+    try {
+        const q = query(
+            collection(db, "historico_compras"),
+            where("user_uid", "==", user.uid),
+            orderBy("timestamp", "desc")
+        );
+
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            historicoList.innerHTML = "<p>Você ainda não realizou nenhuma compra.</p>";
+            return;
+        }
+
+        historicoList.innerHTML = ""; // Limpa lista
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            const compraDiv = document.createElement("div");
+            compraDiv.className = "historico-item";
+
+            // Formata data
+            const dataCompra = data.timestamp?.toDate().toLocaleString() || "";
+
+            // Lista produtos
+            let produtosHTML = "";
+            for (const code in data.cart.items) {
+                const item = data.cart.items[code];
+                produtosHTML += `<div>${item.name} - ${item.quantity} × R$ ${item.price.toFixed(2)}</div>`;
+            }
+
+            compraDiv.innerHTML = `
+                <strong>Data:</strong> ${dataCompra}<br>
+                <strong>Produtos:</strong><br> ${produtosHTML}
+                <strong>Total:</strong> R$ ${data.cart.subtotal.toFixed(2)}
+            `;
+
+            historicoList.appendChild(compraDiv);
+        });
+    } catch (err) {
+        console.error("Erro ao buscar histórico:", err);
+        historicoList.innerHTML = "<p>Erro ao carregar histórico.</p>";
+    }
+}
+
+
+
+
+
+// ==========================
+// LOOP DE ATUALIZAÇÃO
+// ==========================
+setInterval(atualizarCarrinho, 1000);
+atualizarCarrinho();
+
+
+// Expondo funções para HTML
+window.removerItem = removerItem;
+window.finalizarCompra = finalizarCompra;
+window.verHistorico = verHistorico;

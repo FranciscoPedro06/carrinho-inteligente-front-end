@@ -39,12 +39,22 @@
         </div>
 
         <form id="signupForm">
+
           <!-- Nome -->
           <div class="form-group">
-            <label for="fullName">Nome completo</label>
+            <label for="nome">Nome completo</label>
             <div class="input-group-custom">
               <i class="bi bi-person"></i>
-              <input type="text" class="form-control" id="fullName" placeholder="Digite seu nome completo" required>
+              <input type="text" class="form-control" id="nome" placeholder="Digite seu nome completo" required>
+            </div>
+          </div>
+
+          <!-- CPF -->
+          <div class="form-group">
+            <label for="cpf">CPF</label>
+            <div class="input-group-custom">
+              <i class="bi bi-card-text"></i>
+              <input type="text" class="form-control" id="cpf" placeholder="Digite seu CPF" required>
             </div>
           </div>
 
@@ -57,7 +67,7 @@
             </div>
           </div>
 
-          <!-- Telefone -->
+          <!-- Telefone (opcional) -->
           <div class="form-group">
             <label for="phone">Telefone (opcional)</label>
             <div class="input-group-custom">
@@ -143,7 +153,6 @@
         icon.classList.replace("bi-eye-slash", "bi-eye");
       }
     }
-
   </script>
 </body>
 </html>

@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./assets/css/cadastroCarrinho/cadastroCarrinho.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
 </head>
 <body>
     <!-- Navbar -->
@@ -16,19 +18,15 @@
             <a class="navbar-brand" href="#">
                 <i class="bi bi-cart-check-fill"></i> Sistema de Carrinho
             </a>
+            <div class="d-flex ms-auto">
+    <button class="btn btn-outline-danger" id="btnLogout">
+        <i class="bi bi-box-arrow-right"></i> Sair
+    </button>
+</div>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cadastro.html">Cadastro</a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </nav>
 
@@ -45,11 +43,7 @@
                     <i class="bi bi-clock-history"></i> Sessões
                 </button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="itens-tab" data-bs-toggle="tab" data-bs-target="#itens" type="button">
-                    <i class="bi bi-bag-fill"></i> Itens
-                </button>
-            </li>
+        
         </ul>
 
         <!-- Tab Content -->
@@ -131,7 +125,7 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                        
                                             <th>Loja</th>
                                             <th>Código QR</th>
                                             <th>Status</th>
@@ -204,9 +198,7 @@
                                     </label>
                                     <select class="form-select" id="clienteId" required>
                                         <option value="">Selecione o cliente</option>
-                                        <option value="1">João Silva - ID: 1</option>
-                                        <option value="2">Maria Santos - ID: 2</option>
-                                        <option value="3">Pedro Oliveira - ID: 3</option>
+            
                                     </select>
                                 </div>
 
@@ -261,7 +253,7 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            
                                             <th>Carrinho</th>
                                             <th>Cliente</th>
                                             <th>Status</th>
@@ -295,145 +287,11 @@
                 </div>
             </div>
 
-            <!-- Itens Tab -->
-            <div class="tab-pane fade" id="itens" role="tabpanel">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-bag-fill"></i> Cadastro de Itens do Carrinho
-                    </div>
-                    <div class="card-body">
-                        <form id="formItens">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="sessaoId" class="form-label">
-                                        <i class="bi bi-clock-history"></i> Sessão *
-                                    </label>
-                                    <select class="form-select" id="sessaoId" required onchange="atualizarTotalSessao()">
-                                        <option value="">Selecione a sessão</option>
-                                        <option value="1">Sessão #1 - João Silva</option>
-                                        <option value="2">Sessão #2 - Maria Santos</option>
-                                    </select>
-                                </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="produtoId" class="form-label">
-                                        <i class="bi bi-box"></i> Produto *
-                                    </label>
-                                    <select class="form-select" id="produtoId" required onchange="atualizarPrecoProduto()">
-                                        <option value="">Selecione o produto</option>
-                                        <option value="1" data-preco="5.99">Arroz 5kg - R$ 5,99</option>
-                                        <option value="2" data-preco="3.50">Feijão 1kg - R$ 3,50</option>
-                                        <option value="3" data-preco="12.90">Óleo de Soja 900ml - R$ 12,90</option>
-                                        <option value="4" data-preco="8.75">Açúcar 1kg - R$ 8,75</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label for="quantidade" class="form-label">
-                                        <i class="bi bi-123"></i> Quantidade *
-                                    </label>
-                                    <input type="number" class="form-control" id="quantidade" placeholder="1.000" step="0.001" min="0.001" required onchange="calcularPrecoTotal()">
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label for="precoUnit" class="form-label">
-                                        <i class="bi bi-currency-dollar"></i> Preço Unit. (R$) *
-                                    </label>
-                                    <input type="number" class="form-control" id="precoUnit" placeholder="0.00" step="0.01" min="0" required onchange="calcularPrecoTotal()">
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label for="precoTotal" class="form-label">
-                                        <i class="bi bi-calculator"></i> Preço Total (R$)
-                                    </label>
-                                    <input type="number" class="form-control" id="precoTotal" placeholder="0.00" step="0.01" min="0" readonly>
-                                </div>
-
-                                <div class="col-md-12 mb-3">
-                                    <label class="form-label">
-                                        <i class="bi bi-calendar"></i> Adicionado em
-                                    </label>
-                                    <input type="text" class="form-control" value="Automático" disabled>
-                                </div>
-                            </div>
-
-                            <div class="d-flex gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-plus-circle"></i> Adicionar Item
-                                </button>
-                                <button type="reset" class="btn btn-secondary">
-                                    <i class="bi bi-x-circle"></i> Limpar
-                                </button>
-                            </div>
-                        </form>
-
-                        <!-- Lista de Itens -->
-                        <div class="mt-5">
-                            <h5 class="mb-3"><i class="bi bi-list-ul"></i> Itens Cadastrados</h5>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Sessão</th>
-                                            <th>Produto</th>
-                                            <th>Quantidade</th>
-                                            <th>Preço Unit.</th>
-                                            <th>Preço Total</th>
-                                            <th>Adicionado em</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="listaItens">
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Sessão #1</td>
-                                            <td>Arroz 5kg</td>
-                                            <td>2.000</td>
-                                            <td>R$ 5,99</td>
-                                            <td>R$ 11,98</td>
-                                            <td>15/01/2024 14:25</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" onclick="editarItem(1)">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" onclick="excluirItem(1)">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Sessão #1</td>
-                                            <td>Feijão 1kg</td>
-                                            <td>3.000</td>
-                                            <td>R$ 3,50</td>
-                                            <td>R$ 10,50</td>
-                                            <td>15/01/2024 14:27</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" onclick="editarItem(2)">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" onclick="excluirItem(2)">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="total-display">
-                                <i class="bi bi-cart-check"></i> Total da Sessão: R$ 125,50
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/js/cadastroCarrinho/cadastroCarrinho.js"></script>
+    <script type="module" src="./assets/js/cadastroCarrinho/cadastroCarrinho.js"></script>
 </body>
 </html>
