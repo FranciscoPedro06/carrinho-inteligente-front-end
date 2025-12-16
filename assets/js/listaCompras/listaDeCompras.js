@@ -1,6 +1,18 @@
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    serverTimestamp,
+    query,
+    where,
+    orderBy,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
 import { auth } from "../firebase-config.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+const db = getFirestore();
+
 
 // Logout
 const logoutBtn = document.getElementById("logoutBtn");
@@ -15,7 +27,6 @@ logoutBtn.addEventListener("click", async () => {
     }
 });
 
-const db = getFirestore();
 
 
 const API = "http://localhost:5000";
@@ -201,8 +212,8 @@ async function verHistorico() {
     try {
         const q = query(
             collection(db, "historico_compras"),
-            where("user_uid", "==", user.uid),
-            orderBy("timestamp", "desc")
+            where("user_uid", "==", user.uid)
+            // Removemos orderBy para testar
         );
 
         const snapshot = await getDocs(q);
@@ -212,26 +223,36 @@ async function verHistorico() {
             return;
         }
 
-        historicoList.innerHTML = ""; // Limpa lista
+        historicoList.innerHTML = "";
+
         snapshot.forEach(docSnap => {
             const data = docSnap.data();
+            console.log("Doc data:", data); // debug
+
             const compraDiv = document.createElement("div");
             compraDiv.className = "historico-item";
 
-            // Formata data
-            const dataCompra = data.timestamp?.toDate().toLocaleString() || "";
+            // Data segura
+            const dataCompra = data.timestamp?.toDate?.()?.toLocaleString?.() || "Data não disponível";
 
             // Lista produtos
             let produtosHTML = "";
-            for (const code in data.cart.items) {
-                const item = data.cart.items[code];
-                produtosHTML += `<div>${item.name} - ${item.quantity} × R$ ${item.price.toFixed(2)}</div>`;
+            if (data.cart?.items) {
+                for (const code in data.cart.items) {
+                    const item = data.cart.items[code];
+                    produtosHTML += `<div>${item.name} - ${item.quantity} × R$ ${item.price.toFixed(2)}</div>`;
+                }
             }
 
+            const total = data.cart?.subtotal?.toFixed(2) || "0,00";
+
             compraDiv.innerHTML = `
-                <strong>Data:</strong> ${dataCompra}<br>
-                <strong>Produtos:</strong><br> ${produtosHTML}
-                <strong>Total:</strong> R$ ${data.cart.subtotal.toFixed(2)}
+                <div>
+                    <strong>Data:</strong> ${dataCompra}<br>
+                    <strong>Produtos:</strong><br> ${produtosHTML}
+                    <strong>Total:</strong> R$ ${total}
+                </div>
+                <hr>
             `;
 
             historicoList.appendChild(compraDiv);
@@ -241,6 +262,8 @@ async function verHistorico() {
         historicoList.innerHTML = "<p>Erro ao carregar histórico.</p>";
     }
 }
+
+
 
 
 
