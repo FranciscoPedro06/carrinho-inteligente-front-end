@@ -9,9 +9,6 @@ ESP32_STREAM_URL = "http://10.71.132.152/stream"
 cap = cv2.VideoCapture(ESP32_STREAM_URL)
 detector = cv2.QRCodeDetector()
 
-# ==========================
-# BANCO DE PRODUTOS
-# ==========================
 produtos = {
     "7891234567890": ("Arroz Integral 1kg", 12.90),
     "7891234567891": ("Feijão Preto 1kg", 8.50),
@@ -34,9 +31,6 @@ ultimo_tempo = 0
 app = Flask(__name__)
 CORS(app)
 
-# ==========================
-# API
-# ==========================
 @app.route("/cart")
 def get_cart():
     return jsonify({
@@ -51,15 +45,12 @@ def clear_cart():
     subtotal = 0.0
     return jsonify({"status": "ok"})
 
-# Exemplo de rota /checkout
 @app.route("/checkout", methods=["POST"])
 def checkout():
     data = request.json
     user = data.get("user")
     cart = data.get("cart")
 
-    # Aqui você salva o histórico no banco de dados
-    # Por exemplo:
     print("Usuário:", user)
     print("Carrinho:", cart)
 
@@ -81,9 +72,6 @@ def remove_item():
 
     return jsonify({"status": "ok"})
 
-# ==========================
-# LOOP DA CÂMERA
-# ==========================
 def camera_loop():
     global subtotal, ultimo_qr, ultimo_tempo
 
@@ -100,7 +88,6 @@ def camera_loop():
                 if data in produtos:
                     nome, preco = produtos[data]
 
-                    # Adiciona ou incrementa quantidade
                     if data in carrinho:
                         carrinho[data]["quantity"] += 1
                     else:

@@ -6,26 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro - Carrinho Inteligente Digital</title>
 
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Google Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <!-- Bootstrap Icons -->
+ 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-  <!-- CSS do cadastro -->
+
   <link rel="stylesheet" href="./assets/css/cadastro/cadastro.css">
 </head>
 
 <body>
   <div class="signup-container">
-    <!-- Esquerda -->
+   
     <div class="signup-left">
       <div class="logo">
         <h1>🛒 Carrinho Inteligente</h1>
@@ -40,7 +39,7 @@
 
         <form id="signupForm">
 
-          <!-- Nome -->
+       
           <div class="form-group">
             <label for="nome">Nome completo</label>
             <div class="input-group-custom">
@@ -49,7 +48,7 @@
             </div>
           </div>
 
-          <!-- CPF -->
+    
           <div class="form-group">
             <label for="cpf">CPF</label>
             <div class="input-group-custom">
@@ -58,7 +57,7 @@
             </div>
           </div>
 
-          <!-- E-mail -->
+         
           <div class="form-group">
             <label for="email">E-mail</label>
             <div class="input-group-custom">
@@ -67,7 +66,7 @@
             </div>
           </div>
 
-          <!-- Telefone (opcional) -->
+          
           <div class="form-group">
             <label for="phone">Telefone (opcional)</label>
             <div class="input-group-custom">
@@ -76,7 +75,7 @@
             </div>
           </div>
 
-          <!-- Senha -->
+         
           <div class="form-group">
             <label for="password">Senha</label>
             <div class="input-group-custom">
@@ -88,7 +87,7 @@
             </div>
           </div>
 
-          <!-- Confirmar Senha -->
+        
           <div class="form-group">
             <label for="confirmPassword">Confirmar senha</label>
             <div class="input-group-custom">
@@ -100,7 +99,6 @@
             </div>
           </div>
 
-          <!-- Termos -->
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="terms" required>
             <label class="form-check-label" for="terms">
@@ -108,20 +106,20 @@
             </label>
           </div>
 
-          <!-- Botão -->
+       
           <button id="cadastroBtn" type="submit" class="btn-signup">Cadastrar</button>
 
-          <!-- Divider -->
+       
           <div class="divider"><span>ou</span></div>
 
-          <!-- Google -->
+         
           <div class="social-signup">
             <button type="button" class="btn-social google" title="Cadastrar com Google">
               <i class="bi bi-google"></i>
             </button>
           </div>
 
-          <!-- Footer -->
+      
           <div class="signup-footer">
             Já tem uma conta? <a href="index.html">Entre aqui</a>
           </div>
@@ -129,18 +127,16 @@
       </div>
     </div>
 
-    <!-- Direita -->
+   
     <div class="signup-right"></div>
   </div>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Scripts principais -->
+ 
   <script type="module" src="./assets/js/firebase-config.js"></script>
   <script type="module" src="./assets/js/cadastro/cadastro.js"></script>
 
-  <!-- Script visibilidade de senha -->
   <script>
     function togglePassword(id) {
       const input = document.getElementById(id);

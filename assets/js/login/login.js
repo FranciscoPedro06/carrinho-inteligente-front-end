@@ -1,4 +1,4 @@
-// js/login/login.js
+
 
 import { auth } from "../firebase-config.js";
 import {
@@ -7,7 +7,7 @@ import {
   sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-// Alternar visibilidade da senha — precisa estar no escopo global
+
 window.togglePassword = function () {
   const passwordInput = document.getElementById("senha");
   const toggleIcon = document.getElementById("toggleIcon");
@@ -20,8 +20,6 @@ window.togglePassword = function () {
   }
 };
 
-// Evento de login
-// Evento de login
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const email = document.getElementById("email").value;
   const senha = document.getElementById("senha").value;
@@ -30,13 +28,13 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     const userCredential = await signInWithEmailAndPassword(auth, email, senha);
     const user = userCredential.user;
 
-    // Verificar se o e-mail e senha são os específicos
+    
     if (email === "henriquefranciscomatheus0@gmail.com" && senha === "123123123") {
       alert("Login realizado com sucesso!");
-      window.location.href = "cadastroCarrinho.html"; // redireciona para a página de cadastro do carrinho
+      window.location.href = "cadastroCarrinho.html"; 
     } else {
       alert("Login realizado com sucesso!");
-      window.location.href = "listadeCompras.html"; // redireciona para a página principal para outros usuários
+      window.location.href = "listadeCompras.html"; 
     }
   } catch (error) {
     console.error(error);
@@ -45,7 +43,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 });
 
 
-// Observa mudanças de autenticação
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("Usuário logado:", user.email);
@@ -54,7 +52,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Tradução de erros do Firebase
+
 function traduzErroFirebase(code) {
   const erros = {
     "auth/invalid-email": "E-mail inválido.",

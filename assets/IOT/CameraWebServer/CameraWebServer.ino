@@ -1,11 +1,11 @@
 #include "esp_camera.h"
 #include <WiFi.h>
 
-#define CAMERA_MODEL_AI_THINKER // Has PSRAM
+#define CAMERA_MODEL_AI_THINKER
 #include "camera_pins.h"
 
-const char* ssid = "Matheus";
-const char* password = "matheus12345";
+const char* ssid = "nome_da_rede";
+const char* password = "senha_da_rede";
 
 void startCameraServer();
 void setupLedFlash(int pin);
@@ -46,7 +46,7 @@ void setup() {
 
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
-    Serial.printf("Camera init failed: 0x%x\n", err);
+    Serial.printf("Camera falhou: 0x%x\n", err);
     return;
   }
 
@@ -65,11 +65,11 @@ void setup() {
     Serial.print(".");
   }
 
-  Serial.println("\nWiFi connected");
+  Serial.println("\nWiFi conectado");
 
   startCameraServer();
 
-  Serial.print("Camera Ready! Use: http://");
+  Serial.print("Camera Funcionando! Use: http://");
   Serial.println(WiFi.localIP());
 }
 

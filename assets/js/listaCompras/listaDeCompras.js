@@ -14,13 +14,13 @@ import { signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth
 const db = getFirestore();
 
 
-// Logout
+
 const logoutBtn = document.getElementById("logoutBtn");
 logoutBtn.addEventListener("click", async () => {
     try {
         await signOut(auth);
         alert("Você saiu da conta com sucesso!");
-        window.location.href = "index.html"; // Redireciona para a tela de login
+        window.location.href = "index.html"; 
     } catch (error) {
         console.error("Erro ao sair:", error);
         alert("Não foi possível sair da conta.");
@@ -37,18 +37,14 @@ const subtotalEl = document.getElementById("subtotal");
 const totalEl = document.getElementById("total");
 const cartSummary = document.getElementById("cartSummary");
 
-// Armazena os elementos já criados
 const elementosCarrinho = {};
 
-// Guarda o usuário logado
 let usuarioLogado = null;
 auth.onAuthStateChanged(user => {
     usuarioLogado = user;
 });
 
-// ==========================
-// ATUALIZA CARRINHO
-// ==========================
+
 async function atualizarCarrinho() {
     try {
         const res = await fetch(`${API}/cart`);
@@ -57,7 +53,6 @@ async function atualizarCarrinho() {
         const items = data.items;
         const keys = Object.keys(items);
 
-        // Carrinho vazio
         if (keys.length === 0) {
             cartItemsList.innerHTML = `
                 <div class="empty-cart">
@@ -71,16 +66,13 @@ async function atualizarCarrinho() {
             totalEl.textContent = "R$ 0,00";
             cartSummary.style.display = "none";
 
-            // Limpa elementos armazenados
             for (let key in elementosCarrinho) delete elementosCarrinho[key];
             return;
         }
 
-        // Remove placeholder se houver
         const emptyCartDiv = cartItemsList.querySelector(".empty-cart");
         if (emptyCartDiv) emptyCartDiv.remove();
 
-        // Atualiza ou cria elementos do carrinho
         keys.forEach(code => {
             const item = items[code];
             const subtotalItem = item.price * item.quantity;
@@ -109,7 +101,6 @@ async function atualizarCarrinho() {
             }
         });
 
-        // Remove elementos que não existem mais
         for (let key in elementosCarrinho) {
             if (!items[key]) {
                 elementosCarrinho[key].remove();
@@ -117,7 +108,6 @@ async function atualizarCarrinho() {
             }
         }
 
-        // Atualiza totais
         itemCount.textContent = keys.length;
         subtotalEl.textContent = "R$ " + data.subtotal.toFixed(2);
         totalEl.textContent = "R$ " + data.subtotal.toFixed(2);
@@ -128,9 +118,6 @@ async function atualizarCarrinho() {
     }
 }
 
-// ==========================
-// REMOVER ITEM
-// ==========================
 async function removerItem(code) {
     if (!confirm("Remover este item do carrinho?")) return;
 
@@ -146,9 +133,7 @@ async function removerItem(code) {
     }
 }
 
-// ==========================
-// FINALIZAR COMPRA
-// ==========================
+
 async function finalizarCompra() {
     if (!confirm("Deseja finalizar a compra?")) return;
 
@@ -157,14 +142,11 @@ async function finalizarCompra() {
         return;
     }
 
-    // Pega carrinho atual
     const resCart = await fetch(`${API}/cart`);
     const cartData = await resCart.json();
 
-    // Salva diretamente no Firestore
     await salvarHistorico(cartData);
 
-    // Limpa carrinho
     await fetch(`${API}/clear`, { method: "POST" });
     atualizarCarrinho();
 }
@@ -195,7 +177,7 @@ async function salvarHistorico(cart) {
 }
 
 
-// Função para exibir histórico
+
 async function verHistorico() {
     if (!auth.currentUser) {
         alert("Você precisa estar logado para ver o histórico!");
@@ -213,7 +195,6 @@ async function verHistorico() {
         const q = query(
             collection(db, "historico_compras"),
             where("user_uid", "==", user.uid)
-            // Removemos orderBy para testar
         );
 
         const snapshot = await getDocs(q);
@@ -227,15 +208,14 @@ async function verHistorico() {
 
         snapshot.forEach(docSnap => {
             const data = docSnap.data();
-            console.log("Doc data:", data); // debug
+            console.log("Doc data:", data); 
 
             const compraDiv = document.createElement("div");
             compraDiv.className = "historico-item";
 
-            // Data segura
             const dataCompra = data.timestamp?.toDate?.()?.toLocaleString?.() || "Data não disponível";
 
-            // Lista produtos
+           
             let produtosHTML = "";
             if (data.cart?.items) {
                 for (const code in data.cart.items) {
@@ -263,20 +243,9 @@ async function verHistorico() {
     }
 }
 
-
-
-
-
-
-
-// ==========================
-// LOOP DE ATUALIZAÇÃO
-// ==========================
 setInterval(atualizarCarrinho, 1000);
 atualizarCarrinho();
 
-
-// Expondo funções para HTML
 window.removerItem = removerItem;
 window.finalizarCompra = finalizarCompra;
 window.verHistorico = verHistorico;

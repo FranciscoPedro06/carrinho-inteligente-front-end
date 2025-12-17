@@ -4,25 +4,18 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-// ----------------------------
-// Logout
-// ----------------------------
 document.getElementById('btnLogout').addEventListener('click', async () => {
     if (!auth.currentUser) return alert("Você já está deslogado.");
     try {
         await signOut(auth);
         alert("Logout realizado com sucesso!");
-        window.location.href = "/index.html"; // Redireciona para página de login
+        window.location.href = "/index.html"; 
     } catch (err) {
         console.error("Erro ao deslogar:", err);
         alert("Não foi possível deslogar.");
     }
 });
 
-
-// ----------------------------
-// Carregar clientes
-// ----------------------------
 export async function carregarClientes() {
     const select = document.getElementById('clienteId');
     select.innerHTML = '<option value="">Selecione o cliente</option>';
@@ -38,9 +31,7 @@ export async function carregarClientes() {
     }
 }
 
-// ----------------------------
-// Carregar carrinhos para select de sessão
-// ----------------------------
+
 export async function carregarCarrinhosSessao() {
     const select = document.getElementById('carrinhoIdSessao');
     select.innerHTML = '<option value="">Selecione um carrinho</option>';
@@ -56,9 +47,6 @@ export async function carregarCarrinhosSessao() {
     }
 }
 
-// ----------------------------
-// Carrinho físico
-// ----------------------------
 document.getElementById('formCarrinhoFisico').addEventListener('submit', async function(e) {
     e.preventDefault();
     const dados = {
@@ -80,9 +68,6 @@ document.getElementById('formCarrinhoFisico').addEventListener('submit', async f
     }
 });
 
-// ----------------------------
-// Sessão de carrinho
-// ----------------------------
 document.getElementById('formSessao').addEventListener('submit', async function(e) {
     e.preventDefault();
     if (!auth.currentUser) {
@@ -118,9 +103,6 @@ document.getElementById('formSessao').addEventListener('submit', async function(
 });
 
 
-// ----------------------------
-// Funções utilitárias
-// ----------------------------
 export function gerarCodigoQR() {
     const timestamp = Date.now();
     const random = Math.floor(Math.random() * 1000);
@@ -151,9 +133,7 @@ export function calcularPrecoTotal() {
     document.getElementById('precoTotal').value = (quantidade * precoUnit).toFixed(2);
 }
 
-// ----------------------------
-// Editar e Excluir Carrinho
-// ----------------------------
+
 export async function editarCarrinho(id) {
     const docRef = doc(db, "carrinhos", id);
     const docSnap = await getDoc(docRef);
@@ -240,9 +220,6 @@ export async function excluirSessao(id) {
 }
 
 
-// ----------------------------
-// Listagem dinâmica
-// ----------------------------
 export async function carregarCarrinhos() {
     const tbody = document.getElementById('listaCarrinhos');
     tbody.innerHTML = '';
@@ -287,9 +264,6 @@ export async function carregarSessoes() {
 }
 
 
-// ----------------------------
-// Inicialização
-// ----------------------------
 window.editarCarrinho = editarCarrinho;
 window.excluirCarrinho = excluirCarrinho;
 window.gerarCodigoQR = gerarCodigoQR;

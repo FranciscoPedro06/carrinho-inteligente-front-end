@@ -205,6 +205,6 @@ body {
 }
 
 #forgotPasswordLink:hover {
-    text-decoration: underline; /* opcional: só sublinha ao passar o mouse */
+    text-decoration: underline; 
     cursor: pointer;
 }

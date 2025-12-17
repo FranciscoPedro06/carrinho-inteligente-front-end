@@ -1,6 +1,4 @@
-// app_httpd.cpp
-// Versão ADEQUADA e COMPATÍVEL com ESP32 core atual
-// SEM Face Detection / Face Recognition
+
 
 #include "esp_http_server.h"
 #include "esp_timer.h"
